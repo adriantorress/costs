@@ -150,7 +150,7 @@ export default function Project() {
 
   return (
     <>
-      {project.name? (
+      {project.name ? (
         <div className={styles.project_details}>
           <Container customClass="column">
             {message && <Message type={type} msg={message} />}
@@ -199,7 +199,7 @@ export default function Project() {
             <h2>Serviços</h2>
             <Container customClass="start">
               {
-                services?.length > 0?
+                services?.length > 0 ?
                   services?.map(service => (
                     <ServiceCard
                       id={service.id}

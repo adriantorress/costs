@@ -53,7 +53,7 @@ app.get('/projects/:id', (req, res) => {
     }
 
     let project = results[0];
-    if (project?.services) project.services = JSON.(project.services)
+    if (project?.services) project.services = JSON.parse(project.services);
     res.json({ project });
   });
 });
@@ -73,7 +73,7 @@ app.post('/projects', (req, res, next) => {
   const query = 'INSERT INTO PROJECT (name, category_id, budget) VALUES (?, ?, ?)';
   db.query(query, [name, category_id, budget], (err, results) => {
     if (err) {
-      return res.status(500).json(err)
+      return next(err); // Chama o próximo middleware de erro
     } else {
       res.json({ id: results.insertId, name, category_id, budget });
     }
@@ -81,23 +81,50 @@ app.post('/projects', (req, res, next) => {
 });
 
 app.delete('/projects/:id', (req, res) => {
-  console.log("chegou")
-  const id = req.params.id
-  console.log(id)
-  db.query(`DELETE FROM PROJECT WHERE id = ${id}`, [], (err, results) => {
-    console.log(err)
-    console.log(results)
+  const id = req.params.id;
+  db.query('DELETE FROM PROJECT WHERE id = ?', [id], (err, results) => {
     if (err) {
-      return res.status(500).json(err)
+      return res.status(500).json(err);
     } else {
       res.status(200).json({
         success: true
-      })
+      });
     }
-  })
-})
+  });
+});
+
+app.patch('/projects/:id', (req, res) => {
+  const projectId = req.params.id;
+  const { name, category_id, budget } = req.body;
+  const query = 'UPDATE PROJECT SET name=?, category_id=?, budget=? WHERE id=?';
+  db.query(query, [name, category_id, budget, projectId], (err, results) => {
+    if (err) {
+      return res.status(500).json(err);
+    } else {
+      res.json({ id: projectId, name, category_id, budget });
+    }
+  });
+});
+
+app.post('/projects/:id/services', (req, res) => {
+  const projectId = req.params.id;
+  const { name, description, cost } = req.body;
+  const query = 'INSERT INTO SERVICE (name, description, cost, project_id) VALUES (?, ?, ?, ?)';
+  db.query(query, [name, description, cost, projectId], (err, results) => {
+    if (err) {
+      return res.status(500).json(err);
+    } else {
+      res.json({ id: results.insertId, name, description, cost });
+    }
+  });
+});
 
 
+// Middleware para tratamento de erros
+app.use((err, req, res, next) => {
+  console.error(err);
+  res.status(500).json({ error: 'Internal server error' });
+});
 
 // Inicializar o servidor
 app.listen(port, () => {

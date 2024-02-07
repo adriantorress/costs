@@ -10,19 +10,13 @@ import ProjectCard from '../project/ProjectCard'
 
 
 import styles from './Projects.module.css'
+import { toast } from 'react-toastify'
 
 export default function Projects() {
 
   const [projects, setProjects] = useState([])
   const [removeLoading, setRemoveLoading] = useState(false)
-  const[projectMessage, setProjectMessage] = useState('')
 
-  const location = useLocation()
-  let message = ''
-
-  if (location.state) {
-    message = location.state.message
-  }
 
   useEffect(() => {
     setTimeout(() => {
@@ -31,7 +25,8 @@ export default function Projects() {
         headers: { 'Content-Type': 'application/json' }
       }).then((resp) => resp.json())
         .then((data) => {
-          setProjects(data)
+          console.log(data.projects)
+          setProjects(data.projects)
           setRemoveLoading(true)
         })
         .catch((err) => console.log(err))
@@ -46,7 +41,7 @@ export default function Projects() {
     }).then((resp) => resp.json())
       .then(() => {
         setProjects(projects.filter((project) => project.id !== id))
-        setProjectMessage('Projeto removido com sucesso!')
+        toast.success("Projeto removido com sucesso!")
       })
       .catch((err) => console.log(err))
   }
@@ -57,8 +52,6 @@ export default function Projects() {
         <h1>Meus Projetos</h1>
         <LinkButton to="/newproject" text="Criar Projeto" />
       </div>
-      {message && <Message type="success" msg={message} />}
-      {projectMessage && <Message type="success" msg={projectMessage} />}
       <Container customClass="start">
         {projects.length > 0 &&
           projects.map((project) => (
@@ -66,7 +59,7 @@ export default function Projects() {
               name={project.name}
               id={project.id}
               budget={project.budget}
-              category={project.category.name}
+              category={project.category_name}
               key={project.id}
               handleRemove={removeProject}>
             </ProjectCard>

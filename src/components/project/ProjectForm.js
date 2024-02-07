@@ -5,7 +5,7 @@ import SubmitButton from '../form/SubmitButton'
 import { useState, useEffect } from 'react'
 
 export default function ProjectForm({ handleSubmit, btnText, projectData }) {
-  
+
   const [categories, setCategories] = useState([])
   const [project, setProject] = useState(projectData || {})
 
@@ -18,7 +18,8 @@ export default function ProjectForm({ handleSubmit, btnText, projectData }) {
     })
       .then((resp) => resp.json())
       .then((data) => {
-        setCategories(data)
+        console.log(data.categories);
+        setCategories(data.categories);
       })
       .catch((err) => console.log(err))
   }, [])

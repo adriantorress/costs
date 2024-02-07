@@ -10,10 +10,14 @@ import Project from './components/pages/Project'
 import Container from './components/layout/Container'
 import NavBar from './components/layout/NavBar'
 import Footer from './components/layout/Footer'
+import { ToastContainer, toast } from 'react-toastify';
+
+import 'react-toastify/dist/ReactToastify.css';
 
 function App() {
   return (
     <Router>
+      <ToastContainer />
       <NavBar />
       <Container customClass="min_height">
         <Routes>

@@ -2,7 +2,7 @@ import { parse, v4 as uuidv4 } from 'uuid'
 
 import styles from './Project.module.css'
 
-import { useParams } from 'react-router-dom'
+import { useLocation, useParams } from 'react-router-dom'
 import { useState, useEffect } from 'react'
 
 import Loading from '../layout/Loading'
@@ -15,6 +15,7 @@ import ServiceCard from '../service/ServiceCard'
 export default function Project() {
 
   const { id } = useParams()
+  const { state } = useLocation()
 
   const [project, setProject] = useState([])
   const [services, setServices] = useState([])
@@ -25,6 +26,7 @@ export default function Project() {
 
 
   useEffect(() => {
+    console.log(state)
 
     setTimeout(() => {
       fetch(`http://localhost:5000/projects/${id}`, {
@@ -34,7 +36,8 @@ export default function Project() {
         }
       }).then((resp) => resp.json())
         .then((data) => {
-          setProject(data)
+          console.log(data)
+          setProject(data.project)
           setServices(data.services)
         })
         .catch((err) => console.log(err))
@@ -121,7 +124,7 @@ export default function Project() {
     projectUpdated.cost = parseFloat(projectUpdated.cost) - (parseFloat(cost))
 
     fetch(`http://localhost:5000/projects/${projectUpdated.id}`, {
-      method: 'PATCH',
+      method: 'delete',
       headers: {
         'Content-Type': 'application/json'
       },
@@ -147,12 +150,12 @@ export default function Project() {
 
   return (
     <>
-      {project.name ? (
+      {project.name? (
         <div className={styles.project_details}>
           <Container customClass="column">
             {message && <Message type={type} msg={message} />}
             <div className={styles.details_container}>
-              <h1>Projeto: {project.name}</h1>
+              <h1>Projeto: {project?.name}</h1>
               <button
                 className={styles.btn}
                 onClick={toogleProjectForm}>{!showProjectForm ? 'Editar projeto' : 'Fechar'}
@@ -160,7 +163,7 @@ export default function Project() {
               {!showProjectForm ? (
                 <div className={styles.project_info}>
                   <p>
-                    <span>Categoria:</span> {project.category.name}
+                    <span>Categoria:</span> {project?.category?.name}
                   </p>
                   <p>
                     <span>Total de Orçamento:</span> R${project.budget}
@@ -196,9 +199,8 @@ export default function Project() {
             <h2>Serviços</h2>
             <Container customClass="start">
               {
-                services.length > 0
-                  ?
-                  services.map(service => (
+                services?.length > 0?
+                  services?.map(service => (
                     <ServiceCard
                       id={service.id}
                       name={service.name}

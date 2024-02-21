@@ -4,8 +4,6 @@ WORKDIR /costs/backend
 
 COPY package*.json yarn.lock ./
 
-RUN yarn global add ts-node-dev
-
 RUN yarn install
 
 COPY . .

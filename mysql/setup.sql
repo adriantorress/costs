@@ -1,3 +1,7 @@
+CREATE USER IF NOT EXISTS 'project-costs'@'%' IDENTIFIED WITH mysql_native_password BY 'project-costs';
+GRANT ALL PRIVILEGES ON *.* TO 'project-costs'@'%';
+FLUSH PRIVILEGES;
+
 CREATE DATABASE IF NOT EXISTS `db_costs`;
 
 CREATE TABLE IF NOT EXISTS `category` (
@@ -50,3 +54,4 @@ INSERT INTO `db_costs`.`category`
 (`name`)
 VALUES
 ('Planejamento');
+

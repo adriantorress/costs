@@ -8,6 +8,10 @@ RUN yarn install
 
 COPY . .
 
+RUN chmod +x node_modules/.bin/ts-node-dev
+
+RUN chmod +x dist/*.js
+
 EXPOSE 5000
 
 CMD ["yarn", "dev"]

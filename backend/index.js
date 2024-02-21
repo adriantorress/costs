@@ -34,7 +34,7 @@ app.use(bodyParser.json());
 
 // Rotas
 app.get('/projects', (req, res) => {
-  const query = 'SELECT p.*, c.name category_name FROM PROJECT p, CATEGORY c WHERE p.category_id = c.id';
+  const query = 'SELECT p.*, c.name category_name FROM project p, category c WHERE p.category_id = c.id';
   db.query(query, (err, results) => {
     if (err) throw err;
     res.json({ projects: results });
@@ -43,7 +43,7 @@ app.get('/projects', (req, res) => {
 
 app.get('/projects/:id', (req, res) => {
   const projectId = req.params.id;
-  const query = `SELECT p.*, JSON_ARRAYAGG(JSON_OBJECT('id',s.id,'name',s.name,'description',s.description,'value',s.value)) as services FROM PROJECT p LEFT JOIN service s on s.project_id = p.id WHERE p.id = ?`;
+  const query = `SELECT p.*, JSON_ARRAYAGG(JSON_OBJECT('id',s.id,'name',s.name,'description',s.description,'value',s.value)) as services FROM project p LEFT JOIN service s on s.project_id = p.id WHERE p.id = ?`;
 
   db.query(query, [projectId], (err, results) => {
     if (err) throw err;
@@ -60,7 +60,7 @@ app.get('/projects/:id', (req, res) => {
 
 
 app.get('/categories', (req, res) => {
-  const query = 'SELECT * FROM CATEGORY';
+  const query = 'SELECT * FROM category';
   db.query(query, (err, results) => {
     if (err) throw err;
     res.json({ categories: results });
@@ -70,7 +70,7 @@ app.get('/categories', (req, res) => {
 
 app.post('/projects', (req, res, next) => {
   const { name, category_id, budget } = req.body;
-  const query = 'INSERT INTO PROJECT (name, category_id, budget) VALUES (?, ?, ?)';
+  const query = 'INSERT INTO project (name, category_id, budget) VALUES (?, ?, ?)';
   db.query(query, [name, category_id, budget], (err, results) => {
     if (err) {
       return next(err); // Chama o próximo middleware de erro
@@ -82,7 +82,7 @@ app.post('/projects', (req, res, next) => {
 
 app.delete('/projects/:id', (req, res) => {
   const id = req.params.id;
-  db.query('DELETE FROM PROJECT WHERE id = ?', [id], (err, results) => {
+  db.query('DELETE FROM project WHERE id = ?', [id], (err, results) => {
     if (err) {
       return res.status(500).json(err);
     } else {
@@ -96,7 +96,7 @@ app.delete('/projects/:id', (req, res) => {
 app.patch('/projects/:id', (req, res) => {
   const projectId = req.params.id;
   const { name, category_id, budget } = req.body;
-  const query = 'UPDATE PROJECT SET name=?, category_id=?, budget=? WHERE id=?';
+  const query = 'UPDATE project SET name=?, category_id=?, budget=? WHERE id=?';
   db.query(query, [name, category_id, budget, projectId], (err, results) => {
     if (err) {
       return res.status(500).json(err);
@@ -109,7 +109,7 @@ app.patch('/projects/:id', (req, res) => {
 app.post('/projects/:id/services', (req, res) => {
   const projectId = req.params.id;
   const { name, description, cost } = req.body;
-  const query = 'INSERT INTO SERVICE (name, description, cost, project_id) VALUES (?, ?, ?, ?)';
+  const query = 'INSERT INTO service (name, description, cost, project_id) VALUES (?, ?, ?, ?)';
   db.query(query, [name, description, cost, projectId], (err, results) => {
     if (err) {
       return res.status(500).json(err);

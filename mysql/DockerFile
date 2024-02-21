@@ -1,0 +1,10 @@
+FROM mysql:latest
+
+EXPOSE 3306
+
+ENV MYSQL_ROOT_PASSWORD=project-costs
+ENV MYSQL_DATABASE=db_costs
+ENV MYSQL_USER=project-costs
+ENV MYSQL_PASSWORD=project-costs
+
+COPY ./setup.sql /docker-entrypoint-initdb.d/

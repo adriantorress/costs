@@ -11,7 +11,7 @@ const port = 5000;
 
 // Configuração do MySQL
 const db = mysql.createConnection({
-  host: 'localhost',
+  host: 'http://34.42.97.42',
   user: 'project-costs',
   password: 'project-costs',
   database: 'db_costs',
@@ -128,5 +128,5 @@ app.use((err, req, res, next) => {
 
 // Inicializar o servidor
 app.listen(port, () => {
-  console.log(`Servidor rodando em http://localhost:${port}`);
+  console.log(`Servidor rodando em http://34.42.97.42:${port}`);
 });

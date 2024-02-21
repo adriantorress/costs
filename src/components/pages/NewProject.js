@@ -19,7 +19,7 @@ export default function NewProject() {
     }
     project.category_id = project?.category?.id
 
-    await fetch("http://localhost:5000/projects", {
+    await fetch("http://34.42.97.42:5000/projects", {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'

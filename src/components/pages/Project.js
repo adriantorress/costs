@@ -29,7 +29,7 @@ export default function Project() {
     console.log(state)
 
     setTimeout(() => {
-      fetch(`http://localhost:5000/projects/${id}`, {
+      fetch(`http://34.42.97.42:5000/projects/${id}`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json'
@@ -56,7 +56,7 @@ export default function Project() {
     }
 
 
-    fetch(`http://localhost:5000/projects/${id}`, {
+    fetch(`http://34.42.97.42:5000/projects/${id}`, {
       method: 'PATCH',
       headers: {
         'Content-Type': 'application/json'
@@ -99,7 +99,7 @@ export default function Project() {
     project.cost = newCost
 
     //update project
-    fetch(`http://localhost:5000/projects/${project.id}`, {
+    fetch(`http://34.42.97.42:5000/projects/${project.id}`, {
       method: 'PATCH',
       headers: {
         'Content-Type': 'application/json'
@@ -123,7 +123,7 @@ export default function Project() {
     projectUpdated.services = servicesUpdated
     projectUpdated.cost = parseFloat(projectUpdated.cost) - (parseFloat(cost))
 
-    fetch(`http://localhost:5000/projects/${projectUpdated.id}`, {
+    fetch(`http://34.42.97.42:5000/projects/${projectUpdated.id}`, {
       method: 'delete',
       headers: {
         'Content-Type': 'application/json'

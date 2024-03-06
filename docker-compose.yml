@@ -1,0 +1,56 @@
+version: '3.8'
+
+#Serviços
+services:
+  
+  #Front
+  frontend:
+    build: .
+    ports:
+      - "3000:3000"
+    networks:
+      - localnet
+    env_file:
+      - .env
+    depends_on:
+      backend:
+        condition: service_healthy
+  
+  #Back
+  backend:
+    build: ./backend
+    ports:
+      - "5000:5000"
+    networks:
+      - localnet
+    env_file:
+      - .env
+    depends_on:
+      database:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "curl --fail http://localhost:5000/health || exit 1"]
+      interval: 10s
+      retries: 15
+      timeout: 5s
+    
+  
+  #Banco
+  database:
+    build: ./mysql
+    ports:
+      - "3306"
+    networks:
+      - localnet
+    env_file:
+      - .env
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      retries: 15
+      timeout: 5s
+
+#Rede
+networks:
+  localnet:
+    driver: bridge

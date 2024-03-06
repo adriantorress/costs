@@ -8,8 +8,7 @@ RUN yarn install
 
 COPY . .
 
-#RUN chmod +x node_modules/.bin/ts-node-dev 
-#RUN chmod +x node_modules/.bin/wait-for-it.sh
+RUN chmod +x node_modules/.bin/ts-node-dev 
 
 EXPOSE 5000
 

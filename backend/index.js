@@ -1,26 +1,29 @@
 require('express-async-errors');
 const express = require('express');
-const mysql = require('mysql');
+const mysql = require('mysql2');
 const bodyParser = require('body-parser');
 const cors = require('cors');
+require('dotenv').config();
 
 const ApplicationError = require('./src/errors')
 
 const app = express();
-const port = 5000;
+const port = process.env.BACK_PORT;
 
 // Configuração do MySQL
 const db = mysql.createConnection({
-  host: '34.42.97.42',
-  user: 'project-costs',
-  password: 'project-costs',
-  database: 'db_costs',
-  port: 3306
+  host: process.env.MYSQL_HOST,
+  user: process.env.MYSQL_USER,
+  password: process.env.MYSQL_PASSWORD,
+  database: process.env.MYSQL_DATABASE,
+  port: process.env.MYSQL_PORT,
+  authPlugin: process.env.MYSQL_AUTH_PLUGIN
 });
 
 db.connect((err) => {
   if (err) {
     console.error('Erro ao conectar ao MySQL:', err);
+    setTimeout(connect, 2000);
   } else {
     console.log('Conectado ao MySQL');
   }
@@ -43,19 +46,31 @@ app.get('/projects', (req, res) => {
 
 app.get('/projects/:id', (req, res) => {
   const projectId = req.params.id;
+  console.log("Project ID:", projectId); // Verifique se o ID está correto
+
   const query = `SELECT p.*, JSON_ARRAYAGG(JSON_OBJECT('id',s.id,'name',s.name,'description',s.description,'value',s.value)) as services FROM project p LEFT JOIN service s on s.project_id = p.id WHERE p.id = ?`;
 
+  console.log("Query:", query); // Verifique a consulta SQL
+
   db.query(query, [projectId], (err, results) => {
-    if (err) throw err;
+    if (err) {
+      console.error("Erro na consulta SQL:", err);
+      return res.status(500).json({ error: 'Internal server error' });
+    }
 
     if (results.length === 0) {
       return res.status(404).json({ error: 'Project not found' });
     }
 
     let project = results[0];
-    if (project?.services) project.services = JSON.parse(project.services);
+    
     res.json({ project });
   });
+});
+
+// Rota de health check
+app.get('/health', (req, res) => {
+  res.status(200).send('OK');
 });
 
 
@@ -119,7 +134,6 @@ app.post('/projects/:id/services', (req, res) => {
   });
 });
 
-
 // Middleware para tratamento de erros
 app.use((err, req, res, next) => {
   console.error(err);
@@ -128,5 +142,5 @@ app.use((err, req, res, next) => {
 
 // Inicializar o servidor
 app.listen(port, () => {
-  console.log(`Servidor rodando em http://34.42.97.42:${port}`);
+  console.log(`Servidor rodando na porta ${port}`);
 });

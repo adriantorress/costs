@@ -19,7 +19,7 @@ export default function NewProject() {
     }
     project.category_id = project?.category?.id
 
-    await fetch("http://34.42.97.42:5000/projects", {
+    await fetch(`${process.env.REACT_APP_BACKEND_URL}/projects`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'

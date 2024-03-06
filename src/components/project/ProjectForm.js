@@ -10,7 +10,7 @@ export default function ProjectForm({ handleSubmit, btnText, projectData }) {
   const [project, setProject] = useState(projectData || {})
 
   useEffect(() => {
-    fetch("http://34.42.97.42:5000/categories", {
+    fetch(`${process.env.REACT_APP_BACKEND_URL}/categories`, {
       method: 'GET',
       headers: {
         "Content-Type": "application/json"

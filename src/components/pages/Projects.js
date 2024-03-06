@@ -20,7 +20,7 @@ export default function Projects() {
 
   useEffect(() => {
     setTimeout(() => {
-      fetch('http://34.42.97.42:5000/projects', {
+      fetch(`${process.env.REACT_APP_BACKEND_URL}/projects`, {
         method: 'GET',
         headers: { 'Content-Type': 'application/json' }
       }).then((resp) => resp.json())
@@ -35,7 +35,7 @@ export default function Projects() {
 
   function removeProject(id) {
 
-    fetch(`http://34.42.97.42:5000/projects/${id}`, {
+    fetch(`${process.env.REACT_APP_BACKEND_URL}/projects/${id}`, {
       method: 'DELETE',
       headers: { 'Content-Type': 'application/json' }
     }).then((resp) => resp.json())

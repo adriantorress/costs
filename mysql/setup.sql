@@ -1,8 +1,6 @@
-CREATE USER IF NOT EXISTS 'project-costs'@'34.42.97.42' IDENTIFIED WITH mysql_native_password BY 'project-costs';
-GRANT ALL PRIVILEGES ON *.* TO 'project-costs'@'34.42.97.42';
+CREATE USER IF NOT EXISTS 'project-costs'@'localhost' IDENTIFIED WITH caching_sha2_password  BY 'project-costs';
+GRANT ALL PRIVILEGES ON *.* TO 'project-costs'@'localhost';
 FLUSH PRIVILEGES;
-
-ALTER USER 'project-costs'@'34.42.97.42' IDENTIFIED WITH mysql_native_password BY 'project-costs';
 
 CREATE DATABASE IF NOT EXISTS db_costs;
 

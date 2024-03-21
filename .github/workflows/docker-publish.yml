@@ -12,7 +12,7 @@ env:
   # Use docker.io for Docker Hub if empty
   REGISTRY: ghcr.io
   # github.repository as <account>/<repo>
-  COMPOSE_NAME: docker-compose.yml
+  COMPOSE_NAME: Dockerfile
 
 
 jobs:
@@ -58,7 +58,6 @@ jobs:
         id: build-and-push
         uses: docker/build-push-action@v4
         with:
-          context: "{{defaultContext}}:src"
           push: ${{ github.event_name != 'pull_request' }} # Don't push on PR
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
